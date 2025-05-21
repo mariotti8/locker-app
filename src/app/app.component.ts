@@ -22,7 +22,6 @@ export class AppComponent {
   lockerStatus!: LockerStatus;
 
   constructor(private _mqttService: MqttService) {
-    console.log('inside subscribe new topic');
     this.subscription = this._mqttService
       .observe(this.topicname)
       .subscribe((message: IMqttMessage) => {
