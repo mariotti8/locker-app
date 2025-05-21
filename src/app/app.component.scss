@@ -1,0 +1,61 @@
+.container {
+  padding: 2rem;
+  text-align: center;
+  border-radius: 1rem;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #3a3a3a;
+}
+
+.subtitle {
+  font-size: 16px;
+  margin-bottom: 1.5rem;
+  color: #3c4a5d;
+}
+
+.btn {
+  background-color: #164586;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+.btn:hover {
+  background-color: #1f3d70;
+}
+
+.grid {
+  display: flex;
+  justify-content: center;
+}
+
+.locker {
+  width: 200px;
+  height: 200px;
+  background-image: url(./assets/lock.png);
+  background-size: cover;
+  border-radius: 0.25rem;
+  position: relative;
+  transition: all 0.3s ease;
+  margin: 50px 0 80px;
+}
+
+.locker.open {
+  background-image: url(./assets/unlock.png);
+}
+
+.status {
+  font-size: 1rem;
+}
+
+.status-text {
+  font-weight: bold;
+}
