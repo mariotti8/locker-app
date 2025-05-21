@@ -1,8 +1,8 @@
 {
-  "name": "locker-app",
-  "short_name": "locker-app",
-  "theme_color": "#1976d2",
-  "background_color": "#fafafa",
+  "name": "Catone 4 Locker",
+  "short_name": "4Locker",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
