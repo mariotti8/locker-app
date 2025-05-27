@@ -8,15 +8,9 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { IMqttServiceOptions, MqttModule } from 'ngx-mqtt';
 import { provideServiceWorker } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
-const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
-  hostname: 'd204b71c12404f10a30da5503b4ec3f8.s1.eu.hivemq.cloud', // Il tuo hostname HiveMQ Cloud
-  port: 8884, // Porta WebSocket sicura (wss)
-  protocol: 'wss', // Usa 'wss' per WebSocket sicuro
-  path: '/mqtt', // Path tipico per HiveMQ Cloud
-  username: 'mariotti8', // Inserisci il tuo username HiveMQ Cloud
-  password: 'Catone4!', // Inserisci la tua password HiveMQ Cloud
-};
+const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = environment.mqttConfig as IMqttServiceOptions;
 
 export const appConfig: ApplicationConfig = {
   providers: [
