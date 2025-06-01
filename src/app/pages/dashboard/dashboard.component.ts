@@ -1,14 +1,17 @@
 // src/dashboard/dashboard.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { IMqttMessage, MqttService } from 'ngx-mqtt';
-import { Subscription } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
-
-export enum LockerStatus {
-  APRI = 'Aperto',
-  CHIUDI = 'Chiuso',
-}
+import { select, Store } from '@ngrx/store';
+import {
+  selectIsUnlocked,
+  selectLockerError,
+  selectLockerStatus,
+} from '../../store/locker/locker.selectors';
+import * as LockerActions from '../../store/locker/locker.actions';
+import { LockerStatus } from '../../store/locker/locker-status.model';
+import { AppState } from '../../store';
 
 @Component({
   selector: 'dashboard-root',
@@ -17,47 +20,30 @@ export enum LockerStatus {
   imports: [CommonModule],
 })
 export class DashboardComponent {
+  private store = inject(Store<AppState>);
   private auth = inject(AuthService);
+
   user$ = this.auth.user$;
+  lockerStatus$: Observable<LockerStatus | null> = this.store.pipe(
+    select(selectLockerStatus)
+  );
+  isUnlocked$: Observable<boolean> = this.store.pipe(select(selectIsUnlocked));
+  error$: Observable<string | null> = this.store.pipe(
+    select(selectLockerError)
+  );
+  toggleText$: Observable<string> = this.lockerStatus$.pipe(
+    map((status) => this.getToggleText(status))
+  );
 
-  subscription!: Subscription;
-  topicname: string = 'locker/1/status';
-  isConnected: boolean = false;
-  lockerStatus!: LockerStatus;
-
-  constructor(private _mqttService: MqttService) {
-    this.subscription = this._mqttService
-      .observe(this.topicname)
-      .subscribe((message: IMqttMessage) => {
-        console.log('msg: ', message.payload.toString());
-        this.lockerStatus =
-          LockerStatus[message.payload.toString() as keyof typeof LockerStatus];
-      });
+  getToggleText(status: LockerStatus | null): string {
+    if (status === 'APRI') {
+      return 'BLOCCA';
+    } else {
+      return 'SBLOCCA';
+    }
   }
 
-  toggleLockerStatus() {
-    this.lockerStatus === LockerStatus.CHIUDI
-      ? this.sendmsg('APRI')
-      : this.sendmsg('CHIUDI');
+  toggleLockStatus(): void {
+    this.store.dispatch(LockerActions.toggleLockerRequest());
   }
-
-  get toggleText() {
-    return this.lockerStatus === LockerStatus.CHIUDI ? 'SBLOCCA' : 'BLOCCA';
-  }
-  get toggleIcon() {
-    return this.lockerStatus === LockerStatus.CHIUDI ? 'lock_open' : 'lock';
-  }
-
-  sendmsg(msg: string): void {
-    // use unsafe publish for non-ssl websockets
-    this._mqttService.unsafePublish(this.topicname, msg, {
-      qos: 1,
-      retain: true,
-    });
-  }
-
-  // apriLocker() {
-  //   this.mqttService.publish('locker/1/open', 'apri');
-  //   console.log('📤 Comando inviato: apri');
-  // }
 }

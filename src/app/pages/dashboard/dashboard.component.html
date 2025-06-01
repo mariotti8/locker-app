@@ -8,12 +8,12 @@
   <div class="grid">
     <div
       class="locker"
-      [ngClass]="{ open: lockerStatus === 'Aperto' }"
+      [ngClass]="{ open: (lockerStatus$ | async) === 'APRI' }"
       *ngFor="let x of [1]"
     ></div>
   </div>
 
-  <button class="btn" (click)="toggleLockerStatus()">{{ toggleText }}</button>
+  <button class="btn" (click)="toggleLockStatus()">{{ toggleText$ | async }}</button>
 
   <p class="info-text">
     Locker di <span class="status-text">{{ user.displayName }}</span>
