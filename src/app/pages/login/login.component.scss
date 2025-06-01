@@ -1,0 +1,118 @@
+/* SCSS con gradient per il pulsante login, fedele alla preview */
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #229e86;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.login-container {
+  background-color: #eff0f3; /* colore muted dalla palette */
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 360px;
+}
+
+.login-title {
+  color: #229e86; /* teal dalla palette */
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    color: #a3a4a6;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: none;
+    background-color: #d4d4d4;
+    font-size: 1rem;
+    color: #ffffff;
+  }
+}
+
+.login-button,
+.social-button {
+  width: 100%;
+  padding: 0.75rem;
+  color: #ffffff;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.3s ease;
+  display: inline-block;
+}
+
+.login-button {
+  background: #229e86;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.social-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+
+  img {
+    margin-right: 8px;
+  }
+
+
+  &.google {
+    background-color: #ffffff; /* rosso Google */
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  &.apple {
+    color: #ffffff;
+    background-color: #000000; /* nero */
+
+    img {
+      margin-bottom: 3px;
+    }
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+.footer-text {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #229e86; /* teal dalla palette */
+}

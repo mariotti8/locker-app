@@ -8,4 +8,13 @@ export const environment = {
     username: 'mariotti8', // Inserisci il tuo username HiveMQ Cloud
     password: 'Catone4!', // Inserisci la tua password HiveMQ Cloud
   },
+  firebaseConfig: {
+    apiKey: 'AIzaSyDTZSTzCFlB6IgiMJ5noQvetGg-9s1JV7c',
+    authDomain: 'catone4locker.firebaseapp.com',
+    projectId: 'catone4locker',
+    storageBucket: 'catone4locker.firebasestorage.app',
+    messagingSenderId: '989457566765',
+    appId: '1:989457566765:web:456e45452e4fdf93b4bca4',
+    measurementId: 'G-J3912DE045',
+  },
 };
