@@ -1,0 +1,21 @@
+<div class="container" *ngIf="user$ | async as user">
+  <h1>Catone 4 Locker</h1>
+  <p class="subtitle">
+    Utilizza l'app per aprire il tuo locker<br />e far depositare i pacchi ai
+    corrieri.
+  </p>
+
+  <div class="grid">
+    <div
+      class="locker"
+      [ngClass]="{ open: lockerStatus === 'Aperto' }"
+      *ngFor="let x of [1]"
+    ></div>
+  </div>
+
+  <button class="btn" (click)="toggleLockerStatus()">{{ toggleText }}</button>
+
+  <p class="info-text">
+    Locker di <span class="status-text">{{ user.displayName }}</span>
+  </p>
+</div>

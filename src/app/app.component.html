@@ -1,18 +1,6 @@
-
-<div class="container">
-  <h1>Catone 4 Locker</h1>
-  <p class="subtitle">
-    Utilizza l'app per aprire il tuo locker<br />e far depositare i pacchi ai corrieri. 
-  </p>
- 
-  <div class="grid">
-    <div class="locker" [ngClass]="{open: lockerStatus === 'Aperto'}" *ngFor="let x of [1]"></div>
-  </div>
-
-  <button class="btn" (click)="toggleLockerStatus()">{{toggleText}}</button>
-
-
-  <p class="status">
-    Locker di <span class="status-text">Chiara Marchioro</span>
-  </p>
-</div>
+<header class="header" *ngIf="user$ | async as user">
+  <img (click)="logout()" src="../assets/on-off.png" class="logout" />
+</header>
+<main>
+  <router-outlet></router-outlet>
+</main>

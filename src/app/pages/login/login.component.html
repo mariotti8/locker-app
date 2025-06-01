@@ -1,0 +1,35 @@
+<div class="login-container">
+  <h2 class="login-title">App Locker Login</h2>
+  <form (ngSubmit)="login()">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        [(ngModel)]="username"
+        name="username"
+        type="text"
+        id="username"
+        placeholder="Enter your username"
+      />
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        [(ngModel)]="password"
+        name="password"
+        type="password"
+        id="password"
+        placeholder="Enter your password"
+      />
+    </div>
+    <button type="submit" class="login-button">Login</button>
+  </form>
+  <button class="social-button google" (click)="onLoginWithGoogle()">
+    <img src="../../assets/google.png" width="20" />
+Continue with Google
+  </button>
+  <button class="social-button apple" (click)="onLoginWithApple()">
+    <img src="../../assets/apple.png" width="15" />
+    Continue with Apple
+  </button>
+  <div class="footer-text">Password dimenticata?</div>
+</div>
