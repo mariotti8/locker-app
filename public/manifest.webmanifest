@@ -4,6 +4,12 @@
   "theme_color": "#ffffff",
   "background_color": "#229e86",
   "display": "fullscreen",
+  "splash_screen": {
+    "src": "iPhone_16_Pro_portrait.png",
+    "background_color": "#229e86",
+    "theme_color": "#229e86",
+    "orientation": "portrait"
+  },
   "scope": "./",
   "start_url": "./",
   "icons": [
