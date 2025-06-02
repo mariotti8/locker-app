@@ -38,7 +38,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(MqttModule.forRoot(MQTT_SERVICE_OPTIONS)),
     provideHttpClient(withInterceptorsFromDi()),
     provideServiceWorker('ngsw-worker.js', {
-      enabled: !isDevMode(),
+      enabled: environment.production,
       registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
