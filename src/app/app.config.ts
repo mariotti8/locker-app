@@ -2,7 +2,6 @@ import {
   ApplicationConfig,
   importProvidersFrom,
   provideZoneChangeDetection,
-  isDevMode,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -12,13 +11,20 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
-import { provideStore } from '@ngrx/store';
+import { META_REDUCERS, provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { lockerReducer } from './store/locker/locker.reducer';
-import { LockerEffects } from './store/locker/locker.effects';
+import { FirebaseLockerEffects } from './store/firebase-locker/firebase-locker.effects';
 import { provideEffects } from '@ngrx/effects';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { reducers } from './store/reducers';
+import { getFirestore } from 'firebase/firestore';
+import { provideFirestore } from '@angular/fire/firestore';
+import { MqttLockerEffects } from './store/mqtt-locker/mqtt-locker.effects';
+import { AuthEffects } from './store/auth/auth.effects';
+import { metaReducers } from './store/meta-reducer';
 
 const MQTT_SERVICE_OPTIONS: IMqttServiceOptions =
   environment.mqttConfig as IMqttServiceOptions;
@@ -26,15 +32,16 @@ const MQTT_SERVICE_OPTIONS: IMqttServiceOptions =
 export const appConfig: ApplicationConfig = {
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideStore(reducers),
+    provideStore(reducers, { metaReducers }),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: false,
     }),
-    provideEffects([LockerEffects]),
+    provideEffects([FirebaseLockerEffects, MqttLockerEffects, AuthEffects]),
     importProvidersFrom(MqttModule.forRoot(MQTT_SERVICE_OPTIONS)),
     provideHttpClient(withInterceptorsFromDi()),
     provideServiceWorker('ngsw-worker.js', {
