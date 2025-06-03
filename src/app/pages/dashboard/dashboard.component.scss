@@ -2,6 +2,9 @@
   padding: 1rem 2rem 2rem;
   text-align: center;
   border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 h1 {
@@ -25,26 +28,60 @@ h1 {
   cursor: pointer;
   transition: background-color 0.2s ease;
   width: 100%;
+  margin-bottom: 16px;
+}
+
+.btn.release {
+  background-color: #ff4d4d;  /* Red for release button */  
 }
 
 .grid {
-  display: flex;
   justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: 16px;
 }
 
 .locker {
-  width: 200px;
-  height: 200px;
-  background-image: url(../../../assets/lock.png);
-  background-size: cover;
+  height: 100px;
+  background-color: #5088fa;
   border-radius: 0.25rem;
-  position: relative;
-  transition: all 0.3s ease;
-  margin: 50px 0 80px;
+  margin: 2px;
+  flex: 0 0 100px;
+  border: 1px solid black;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  color: white;
+  font-size: 30px;
+  transition: all 0.4s ease;
+  opacity: 0.5;
 }
 
-.locker.open {
-  background-image: url(../../../assets/unlock.png);
+.locker.available {
+  opacity: 1;
+}
+
+.current-locker-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .current-locker {
+    width: 200px;
+    height: 200px;
+    background-image: url(../../../assets/lock.png);
+    background-size: cover;
+    border-radius: 0.25rem;
+    position: relative;
+    transition: all 0.3s ease;
+    margin: 50px 0 80px;
+  }
+
+  .current-locker.open {
+    background-image: url(../../../assets/unlock.png);
+  }
 }
 
 .info-text {

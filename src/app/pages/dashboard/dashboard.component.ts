@@ -5,13 +5,26 @@ import { map, Observable, tap } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { select, Store } from '@ngrx/store';
 import {
+  selectAllLockers,
+  selectLockersLoading,
+} from '../../store/firebase-locker/firebase-locker.selectors';
+import * as FirebaseLockerActions from '../../store/firebase-locker/firebase-locker.actions';
+import * as MqttLockerActions from '../../store/mqtt-locker/mqtt-locker.actions';
+import { AppState } from '../../store';
+
+import { FirebaseLocker } from '../../models/locker.model';
+import { User } from '@firebase/auth';
+import {
+  occupyLocker,
+  releaseLocker,
+} from '../../store/firebase-locker/firebase-locker.actions';
+import {
+  selectCurrentLocker,
   selectIsUnlocked,
   selectLockerError,
   selectLockerStatus,
-} from '../../store/locker/locker.selectors';
-import * as LockerActions from '../../store/locker/locker.actions';
-import { LockerStatus } from '../../store/locker/locker-status.model';
-import { AppState } from '../../store';
+} from '../../store/mqtt-locker/mqtt-locker.selectors';
+import { LockerStatus } from '../../store/mqtt-locker/locker-status.model';
 
 @Component({
   selector: 'dashboard-root',
@@ -23,27 +36,58 @@ export class DashboardComponent {
   private store = inject(Store<AppState>);
   private auth = inject(AuthService);
 
-  user$ = this.auth.user$;
-  lockerStatus$: Observable<LockerStatus | null> = this.store.pipe(
+  currentUser!: User | null;
+
+  user$ = this.auth.user$.pipe(
+    tap((user) => {
+      this.currentUser = user;
+    })
+  );
+
+  currentLocker$ = this.store.select(selectCurrentLocker);
+  status$: Observable<LockerStatus | null> = this.store.pipe(
     select(selectLockerStatus)
   );
   isUnlocked$: Observable<boolean> = this.store.pipe(select(selectIsUnlocked));
-  error$: Observable<string | null> = this.store.pipe(
-    select(selectLockerError)
+  error$: Observable<string> = this.store.pipe(select(selectLockerError));
+  lockers$: Observable<FirebaseLocker[]> = this.store.pipe(
+    select(selectAllLockers)
   );
-  toggleText$: Observable<string> = this.lockerStatus$.pipe(
-    map((status) => this.getToggleText(status))
-  );
+  loading$: Observable<boolean> = this.store.pipe(select(selectLockersLoading));
 
-  getToggleText(status: LockerStatus | null): string {
-    if (status === 'APRI') {
-      return 'BLOCCA';
-    } else {
-      return 'SBLOCCA';
-    }
+  constructor() {
+    this.store.dispatch(FirebaseLockerActions.loadLockers());
+    this.status$ = this.store.pipe(
+      select(selectLockerStatus)
+    );
+  }
+
+  releaseLoceker(locker: FirebaseLocker): void {
+    this.store.dispatch(
+      releaseLocker({
+        lockerId: locker.id,
+        uidd: this.currentUser?.uid as string,
+      })
+    );
   }
 
   toggleLockStatus(): void {
-    this.store.dispatch(LockerActions.toggleLockerRequest());
+    this.store.dispatch(MqttLockerActions.toggleLockerRequest());
+  }
+
+  selectLocker(locker: FirebaseLocker): void {
+    console.log('Locker selected:', { locker });
+
+    if (locker.available) {
+      this.store.dispatch(MqttLockerActions.selectLocker({ locker }));
+      // l’utente vuole occupare il locker
+      this.store.dispatch(
+        occupyLocker({
+          lockerId: locker.id,
+          userId: this.currentUser?.uid as string,
+        })
+      );
+    } else {
+    }
   }
 }
