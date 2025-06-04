@@ -1,6 +1,17 @@
-<header class="header" *ngIf="user$ | async as user">
-  <img (click)="logout()" src="../assets/on-off.png" class="logout" />
-</header>
-<main>
-  <router-outlet></router-outlet>
-</main>
+<ng-container *ngIf="user$ | async as user; else loader">
+  <header class="header">
+    <img (click)="logout()" src="../assets/on-off.png" class="logout" />
+  </header>
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</ng-container>
+
+<ng-template #loader>
+  <div class="loader">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div>
+</ng-template>
