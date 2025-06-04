@@ -1,19 +1,40 @@
-import { inject } from '@angular/core';
+// src/app/guards/auth.guard.ts
+import { inject, Injectable } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { Auth } from '@angular/fire/auth';
-import { firstValueFrom } from 'rxjs';
-import { user } from '@angular/fire/auth';
+import { Store } from '@ngrx/store';
+import { combineLatest } from 'rxjs';
+import { filter, take, map } from 'rxjs/operators';
+import {
+  selectAuthInitialized,
+  selectIsAuthenticated,
+} from '../store/auth/auth.selectors';
 
-export const authGuard: CanActivateFn = async () => {
-  const auth = inject(Auth);
-  const router = inject(Router);
+@Injectable({ providedIn: 'root' })
+export class AuthGuard {
+  // Inietto Store e Router
+  private store = inject(Store);
+  private router = inject(Router);
 
-  // Attendi che Firebase carichi l'utente una volta
-  const currentUser = await firstValueFrom(user(auth));
-
-  if (currentUser) {
-    return true;
+  canActivate(): CanActivateFn {
+    // Usiamo combineLatest per attendere inizializzazione e ottenere autenticazione
+    return () =>
+      combineLatest([
+        this.store.select(selectAuthInitialized),
+        this.store.select(selectIsAuthenticated),
+      ]).pipe(
+        // Aspetta finché initialized === false
+        filter(([initialized, _]) => initialized),
+        // Prendi solo la prima emissione (quella in cui initialized diventa true)
+        take(1),
+        map(([_, isAuth]) => {
+          if (!isAuth) {
+            // Se non sono autenticato, redirect a /login
+            this.router.navigate(['/login']);
+            return false;
+          }
+          // Se sono autenticato, lascio passare
+          return true;
+        })
+      );
   }
-
-  return router.createUrlTree(['/login']);
-};
+}

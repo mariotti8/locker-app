@@ -40,8 +40,6 @@ export class LockersService {
       map((docs: DocumentData[]) => {
         // collectionData restituisce array di “DocumentData” con campo “id” aggiunto automaticamente
         // Possiamo castarne il tipo in Locker
-        console.log({ docs });
-
         return docs.map((d) => d as FirebaseLocker);
       })
     );
@@ -62,7 +60,6 @@ export class LockersService {
         throw new Error('Locker non trovato');
       }
       const data = snap.data() as FirebaseLocker;
-      console.log('Occupy', { data });
       if (!data.available) {
         throw new Error('Questo locker è già occupato.');
       }
@@ -88,7 +85,6 @@ export class LockersService {
         throw new Error('Locker non trovato');
       }
       const data = snap.data() as FirebaseLocker;
-      console.log('Release', { data, userId });
       if (data.available) {
         throw new Error('Questo locker è già libero.');
       }

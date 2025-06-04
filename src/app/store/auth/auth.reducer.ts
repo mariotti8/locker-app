@@ -1,18 +1,20 @@
 // src/app/store/auth.reducer.ts
 import { createReducer, on } from '@ngrx/store';
-import { UserProfile } from '@angular/fire/auth';
 import * as AuthActions from './auth.actions';
+import { UserProfile } from './auth.models';
 
 export interface AuthState {
   user: UserProfile | null;
   loading: boolean;
   error: string | null;
+  initialized: boolean; // Aggiunto per tenere traccia dell'inizializzazione
 }
 
 export const initialAuthState: AuthState = {
   user: null,
   loading: true,
   error: null,
+  initialized: false, // Inizialmente non inizializzato
 };
 
 export const authReducer = createReducer(
@@ -35,6 +37,7 @@ export const authReducer = createReducer(
     user,
     loading: false,
     error: null,
+    initialized: true,
   })),
 
   // Login fallito
@@ -43,6 +46,7 @@ export const authReducer = createReducer(
     user: null,
     loading: false,
     error,
+    initialized: true,
   })),
 
   // logout → reset completo di user (ma non del loading/error)
@@ -57,12 +61,14 @@ export const authReducer = createReducer(
     user: null,
     loading: false,
     error: null,
+    initialized: true,
   })),
 
   on(AuthActions.logoutFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
+    initialized: true,
   })),
 
   // Sincronizzazione con onAuthStateChanged
@@ -71,5 +77,6 @@ export const authReducer = createReducer(
     user,
     loading: false,
     error: null,
+    initialized: true,
   }))
 );

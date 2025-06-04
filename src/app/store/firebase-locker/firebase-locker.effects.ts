@@ -1,15 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  Actions,
-  createEffect,
-  ofType
-} from '@ngrx/effects';
-import {
-  map,
-  switchMap,
-  catchError,
-  exhaustMap,
-} from 'rxjs/operators';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { map, switchMap, catchError, exhaustMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import * as FirebaseLockerActions from './firebase-locker.actions';
@@ -32,11 +23,9 @@ export class FirebaseLockerEffects {
       switchMap(() =>
         // subscribeToLockers restituisce un Observable<Locker[]>
         this.lockerService.getLockers$().pipe(
-          map((lockers: FirebaseLocker[]) => {
-            console.log('Lockers from service:', { lockers });
-
-            return FirebaseLockerActions.loadLockersSuccess({ lockers });
-          }),
+          map((lockers: FirebaseLocker[]) =>
+            FirebaseLockerActions.loadLockersSuccess({ lockers })
+          ),
           catchError((err) =>
             of(FirebaseLockerActions.loadLockersFailure({ error: err.message }))
           )

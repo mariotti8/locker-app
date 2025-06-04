@@ -1,5 +1,5 @@
-<ng-container *ngIf="user$ | async as user; else loader">
-  <header class="header">
+<ng-container>
+  <header class="header" *ngIf="(isAuthenticated$ | async)">
     <img (click)="logout()" src="../assets/on-off.png" class="logout" />
   </header>
   <main>

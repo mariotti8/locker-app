@@ -8,14 +8,14 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
-  User,
-  UserProfile,
+  User
 } from '@angular/fire/auth';
 import { Store } from '@ngrx/store';
 import { from, map, catchError, switchMap, tap } from 'rxjs';
 import { of } from 'rxjs';
 import * as AuthActions from './auth.actions';
 import { Router } from '@angular/router';
+import { UserProfile } from './auth.models';
 
 @Injectable()
 export class AuthEffects {
@@ -74,8 +74,6 @@ export class AuthEffects {
             return AuthActions.loginSuccess({ user: userProfile });
           }),
           catchError((err) => {
-            console.log({ err });
-
             return of(
               AuthActions.loginFailure({
                 error: err.message || 'Errore Google Sign-In',

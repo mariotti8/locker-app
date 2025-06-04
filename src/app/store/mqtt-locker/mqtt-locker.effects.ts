@@ -48,7 +48,7 @@ export class MqttLockerEffects {
     return this.actions$.pipe(
       ofType(MqttLockerActions.selectLocker),
       mergeMap(({ locker }) =>
-        this.lockerMqttService.observeStatus(locker.id).pipe(
+        this.lockerMqttService.observeStatus(locker?.id).pipe(
           map((status: LockerStatus) =>
             MqttLockerActions.lockerStatusUpdated({ status })
           ),

@@ -13,7 +13,6 @@ import * as MqttLockerActions from '../../store/mqtt-locker/mqtt-locker.actions'
 import { AppState } from '../../store';
 
 import { FirebaseLocker } from '../../models/locker.model';
-import { User } from '@firebase/auth';
 import {
   occupyLocker,
   releaseLocker,
@@ -25,6 +24,8 @@ import {
   selectLockerStatus,
 } from '../../store/mqtt-locker/mqtt-locker.selectors';
 import { LockerStatus } from '../../store/mqtt-locker/locker-status.model';
+import { selectAuthLoading, selectUser } from '../../store/auth/auth.selectors';
+import { UserProfile } from '../../store/auth/auth.models';
 
 @Component({
   selector: 'dashboard-root',
@@ -34,32 +35,25 @@ import { LockerStatus } from '../../store/mqtt-locker/locker-status.model';
 })
 export class DashboardComponent {
   private store = inject(Store<AppState>);
-  private auth = inject(AuthService);
 
-  currentUser!: User | null;
+  currentUser!: UserProfile | null;
 
-  user$ = this.auth.user$.pipe(
+  user$ = this.store.pipe(
+    select(selectUser),
     tap((user) => {
       this.currentUser = user;
     })
   );
 
+  loading$ = this.store.select(selectAuthLoading);
   currentLocker$ = this.store.select(selectCurrentLocker);
-  status$: Observable<LockerStatus | null> = this.store.pipe(
-    select(selectLockerStatus)
-  );
-  isUnlocked$: Observable<boolean> = this.store.pipe(select(selectIsUnlocked));
-  error$: Observable<string> = this.store.pipe(select(selectLockerError));
-  lockers$: Observable<FirebaseLocker[]> = this.store.pipe(
-    select(selectAllLockers)
-  );
-  loading$: Observable<boolean> = this.store.pipe(select(selectLockersLoading));
+  status$: Observable<LockerStatus | null> = this.store.select(selectLockerStatus);
+  isUnlocked$: Observable<boolean> = this.store.select(selectIsUnlocked);
+  error$: Observable<string> = this.store.select(selectLockerError);
+  lockers$: Observable<FirebaseLocker[]> = this.store.select(selectAllLockers);
 
   constructor() {
     this.store.dispatch(FirebaseLockerActions.loadLockers());
-    this.status$ = this.store.pipe(
-      select(selectLockerStatus)
-    );
   }
 
   releaseLoceker(locker: FirebaseLocker): void {
@@ -76,8 +70,6 @@ export class DashboardComponent {
   }
 
   selectLocker(locker: FirebaseLocker): void {
-    console.log('Locker selected:', { locker });
-
     if (locker.available) {
       this.store.dispatch(MqttLockerActions.selectLocker({ locker }));
       // l’utente vuole occupare il locker

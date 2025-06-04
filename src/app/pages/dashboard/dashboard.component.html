@@ -1,37 +1,50 @@
-<div class="container" *ngIf="user$ | async as user">
-  <h1>Catone 4 Locker</h1>
+<ng-container *ngIf="!(loading$ | async); else loader">
+  <div class="container" *ngIf="user$ | async as user">
+    <h1>Catone 4 Locker</h1>
 
-  <div *ngIf="!(currentLocker$ | async)">
-    <p class="subtitle">Seleziona il tuo locker tra quelli disponibili</p>
+    <div *ngIf="!(currentLocker$ | async)">
+      <p class="subtitle">Seleziona il tuo locker tra quelli disponibili</p>
 
-    <div class="grid">
-      <div
-        (click)="selectLocker(locker)"
-        class="locker"
-        [ngClass]="{ available: locker.available }"
-        *ngFor="let locker of lockers$ | async"
-      >
-        {{ locker.id }}
+      <div class="grid">
+        <div
+          (click)="selectLocker(locker)"
+          class="locker"
+          [ngClass]="{ available: locker.available }"
+          *ngFor="let locker of lockers$ | async"
+        >
+          {{ locker.id }}
+        </div>
       </div>
     </div>
-  </div>
-  <div
-    class="current-locker-container"
-    *ngIf="currentLocker$ | async as currentLocker"
-  >
-    <p class="subtitle">
-      Utilizza l'app per aprire il tuo locker<br />e far depositare i pacchi ai
-      corrieri.
-    </p>
-
     <div
-      class="current-locker"
-      [ngClass]="{ open: (status$ | async) === 'Aperto' }"
-    ></div>
-    <button class="btn" (click)="toggleLockStatus()">
-      {{ (status$ | async) === "Aperto" ? "BLOCCA" : "SBLOCCA" }}
-    </button>
+      class="current-locker-container"
+      *ngIf="currentLocker$ | async as currentLocker"
+    >
+      <p class="subtitle">
+        Utilizza l'app per aprire il tuo locker<br />e far depositare i pacchi
+        ai corrieri.
+      </p>
 
-    <button class="btn release" (click)="releaseLoceker(currentLocker)">LIBERA</button>
+      <div
+        class="current-locker"
+        [ngClass]="{ open: (status$ | async) === 'Aperto' }"
+      ></div>
+      <button class="btn" (click)="toggleLockStatus()">
+        {{ (status$ | async) === "Aperto" ? "BLOCCA" : "SBLOCCA" }}
+      </button>
+
+      <button class="btn release" (click)="releaseLoceker(currentLocker)">
+        LIBERA
+      </button>
+    </div>
   </div>
-</div>
+</ng-container>
+
+<ng-template #loader>
+  <div class="loader">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div>
+</ng-template>
